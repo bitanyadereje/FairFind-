@@ -28,8 +28,13 @@ async function getFairnessAssessment(itemName: string | null, category: string |
 }
 
 async function processUnprocessed() {
+  // ✅ Include channel_username in SELECT
   const { rows } = await pool.query(
-    "SELECT id, raw_text FROM raw_feeds WHERE processed = false ORDER BY id LIMIT 2"
+    `SELECT id, raw_text, telegram_chat_id, telegram_message_id, channel_username
+     FROM raw_feeds 
+     WHERE processed = false 
+     ORDER BY id 
+     LIMIT 20`
   );
   
   if (rows.length === 0) {
@@ -44,34 +49,42 @@ async function processUnprocessed() {
       const extracted = await extractProductFromText(feed.raw_text);
       console.log('Extracted:', extracted);
       
-      // Calculate fairness
+      // ✅ Build URL using channel_username if available
+    let messageUrl = null;
+if (feed.channel_username && feed.telegram_message_id) {
+  // Use channel username (reliable)
+  messageUrl = `https://t.me/${feed.channel_username}/${feed.telegram_message_id}`;
+} else if (feed.telegram_chat_id && feed.telegram_message_id) {
+  // Fallback (less reliable)
+  let chatId = feed.telegram_chat_id;
+  if (chatId.startsWith('-100')) chatId = chatId.substring(4);
+  messageUrl = `https://t.me/c/${chatId}/${feed.telegram_message_id}`;
+}
       let fairness = 'unknown';
       if (extracted.price) {
         fairness = await getFairnessAssessment(extracted.item_name, extracted.category, extracted.price);
         console.log(`Fairness: ${fairness}`);
       }
       
-      // Insert into structured_marketplace
       await pool.query(
         `INSERT INTO structured_marketplace 
-         (raw_feed_id, item_name, price, currency, condition, location, contact_info, category, fairness_status)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+         (raw_feed_id, item_name, price, currency, condition, location, contact_info, category, fairness_status, message_url)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
         [feed.id, extracted.item_name, extracted.price, extracted.currency || 'ETB',
-         extracted.condition, extracted.location, extracted.contact_info, extracted.category, fairness]
+         extracted.condition, extracted.location, extracted.contact_info, extracted.category, fairness, messageUrl]
       );
       
-      // Insert into price_history for future comparisons
       await pool.query(
         `INSERT INTO price_history (item_name, category, price, currency, source_feed_id)
          VALUES ($1, $2, $3, $4, $5)`,
         [extracted.item_name, extracted.category, extracted.price, extracted.currency || 'ETB', feed.id]
       );
       
-      // Mark raw feed as processed
       await pool.query("UPDATE raw_feeds SET processed = true WHERE id = $1", [feed.id]);
-      console.log(`✅ Saved: ${extracted.item_name} – ${extracted.price} ETB (${fairness})`);
+      console.log(`✅ Saved: ${extracted.item_name || 'Unnamed'} – ${extracted.price} ETB (${fairness})`);
+      if (messageUrl) console.log(`   🔗 ${messageUrl}`);
       
-      await sleep(6000); // respect rate limits
+      await sleep(6000);
     } catch (err) {
       console.error(`❌ Failed feed ${feed.id}:`, err);
     }
