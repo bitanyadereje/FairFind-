@@ -45,15 +45,15 @@ bot.command('search', async (ctx) => {
       response += `   🏷️ Fairness: ${fairness}\n\n`;
     }
     for (const row of rows) {
-  console.log(`URL being sent: ${row.message_url}`); // ✅ inside loop
+  console.log(`URL being sent: ${row.message_url}`);
+  console.log(`🔍 Query returned ${rows.length} rows`); // ✅ inside loop
   // ... rest of your response building
 }
-    // No parse_mode -> plain text, links are still clickable
     await ctx.reply(response);
   } catch (err) {
-    console.error('Search error:', err);
-    ctx.reply('Sorry, something went wrong.');
-  }
+  console.error('❌ Search error details:', err);  // this will appear in Render logs
+  ctx.reply('Sorry, something went wrong. The error has been logged.');
+}
 });
 
 bot.command('ping', (ctx) => ctx.reply('pong'));
