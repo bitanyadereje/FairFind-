@@ -1,29 +1,19 @@
 import { Pool } from 'pg';
-import dotenv from 'dotenv';
 
-// 1. Load environment variables from .env
-dotenv.config();
+const connectionString = process.env.DATABASE_URL;
+if (!connectionString) {
+  console.error('❌ DATABASE_URL environment variable is missing');
+  process.exit(1);
+}
 
-// 2. Create a connection pool using the variables
 const pool = new Pool({
-  host: process.env.DB_HOST,
-  port: parseInt(process.env.DB_PORT || '5432'),
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  max: 10,                     // maximum number of clients in the pool
-  idleTimeoutMillis: 30000,    // close idle clients after 30 seconds
+  connectionString,
+  ssl: { rejectUnauthorized: false }, // required for Neon
 });
 
-// 3. Optional: test the connection on startup
-pool.connect((err, client, release) => {
-  if (err) {
-    console.error('❌ Database connection failed:', err.stack);
-  } else {
-    console.log('✅ Connected to PostgreSQL');
-    release();
-  }
+pool.connect((err) => {
+  if (err) console.error('❌ Database connection failed:', err);
+  else console.log('✅ Connected to PostgreSQL');
 });
 
-// 4. Export the pool so other files can run queries
 export default pool;

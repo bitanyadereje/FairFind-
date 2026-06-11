@@ -1,7 +1,7 @@
 import { Telegraf } from 'telegraf';
 import dotenv from 'dotenv';
 import pool from '../config/db';
-
+import express from 'express';
 dotenv.config();
 
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN!);
@@ -57,6 +57,13 @@ bot.command('search', async (ctx) => {
 });
 
 bot.command('ping', (ctx) => ctx.reply('pong'));
+
+
+const app = express();
+const port = process.env.PORT || 3000;
+app.get('/', (req, res) => res.send('OK'));
+app.listen(port, () => console.log(`✅ Health check server on port ${port}`));
+
 
 bot.launch();
 console.log('🤖 Search bot running...');
