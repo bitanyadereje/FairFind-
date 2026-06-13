@@ -17,6 +17,23 @@ const CHANNELS = [
   'sol54298',
   'liy2354',
   'nejashionlinemarketing',
+  'sevenonlinestore1',
+  'ethio_online_markett',
+  'Habtamu-car-market',
+  'Brikti-fashion',
+  'Teyyib_addis2',
+  'love_lovehot69',
+  'ExclusiveMarket',
+  '	teyyib_addis',
+  'muhammedamin111',
+  'guzotorshen',
+  'sinayelj',
+  'Dunacosmetics',
+  'Shewabrand',
+  'Lolicollection69',
+  'NaveBonda',
+  'Navebags',
+  ''
 ];
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));

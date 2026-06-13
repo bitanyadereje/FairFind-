@@ -22,12 +22,18 @@
     "@google/generative-ai": "^0.24.1",
     "@mtcute/dispatcher": "^0.29.7",
     "@mtcute/node": "^0.29.7",
+    "axios": "^1.17.0",
     "cheerio": "^1.2.0",
+    "curl-cffi-node": "^0.1.8",
     "dotenv": "^17.4.2",
+    "ejs": "^6.0.1",
     "express": "^5.2.1",
     "groq-sdk": "^1.2.1",
     "node-fetch": "^3.3.2",
     "pg": "^8.21.0",
+    "playwright": "^1.60.0",
+    "puppeteer": "^25.1.0",
+    "scraperapi-sdk": "^2.0.1",
     "telegraf": "^4.16.3"
   },
   "devDependencies": {

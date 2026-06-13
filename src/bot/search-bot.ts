@@ -1,11 +1,25 @@
 import { Telegraf } from 'telegraf';
 import dotenv from 'dotenv';
+import { Markup } from 'telegraf';
+
 import pool from '../config/db';
 import express from 'express';
 dotenv.config();
 
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN!);
 
+
+bot.start(async (ctx) => {
+  const webAppUrl = 'https://fairfind-web.onrender.com'; // your dashboard URL
+  const keyboard = Markup.inlineKeyboard([
+    [Markup.button.webApp('🔍 Open FairFind', webAppUrl)]
+  ]);
+  await ctx.reply(
+    'Welcome to FairFind! Click the button below to search Ethiopian marketplaces with price fairness scores.',
+    keyboard
+  );
+
+});
 bot.command('search', async (ctx) => {
   const query = ctx.message.text.replace('/search', '').trim();
   if (!query) {

@@ -49,7 +49,6 @@ async function processUnprocessed() {
       const extracted = await extractProductFromText(feed.raw_text);
       console.log('Extracted:', extracted);
       
-      // ✅ Build URL using channel_username if available
     let messageUrl = null;
 if (feed.channel_username && feed.telegram_message_id) {
   // Use channel username (reliable)
@@ -80,8 +79,7 @@ if (feed.channel_username && feed.telegram_message_id) {
         [extracted.item_name, extracted.category, extracted.price, extracted.currency || 'ETB', feed.id]
       );
       
-      await pool.query("UPDATE raw_feeds SET processed = true WHERE id = $1", [feed.id]);
-      console.log(`✅ Saved: ${extracted.item_name || 'Unnamed'} – ${extracted.price} ETB (${fairness})`);
+await pool.query("UPDATE raw_feeds SET processed = true WHERE id = $1", [feed.id]);      console.log(`✅ Saved: ${extracted.item_name || 'Unnamed'} – ${extracted.price} ETB (${fairness})`);
       if (messageUrl) console.log(`   🔗 ${messageUrl}`);
       
       await sleep(6000);
