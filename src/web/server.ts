@@ -6,7 +6,21 @@ const port = process.env.PORT || 3000;
 
 app.set('view engine', 'ejs');
 app.set('views', './src/web/views');
-
+app.get('/debug', async (req, res) => {
+  try {
+    // Check total count
+    const countResult = await pool.query('SELECT COUNT(*) FROM structured_marketplace');
+    // Check sample rows
+    const sample = await pool.query('SELECT item_name, price FROM structured_marketplace LIMIT 5');
+    res.json({
+      total: countResult.rows[0].count,
+      sample: sample.rows,
+      databaseUrl: process.env.DATABASE_URL ? 'set' : 'missing'
+    });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+});
 // Home page with search and filters
 app.get('/', async (req, res) => {
   const { q, category, fairness, sort } = req.query;
