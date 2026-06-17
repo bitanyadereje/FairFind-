@@ -4,202 +4,268 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>FairFind – Ethiopian Marketplace Search</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
     <style>
-        /* ----- Reset & base ----- */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        /* ---- Your original CSS (unchanged) ---- */
+        :root {
+            --ink: #eaf1fb;
+            --ink-soft: #9db3d4;
+            --paper: #081a3a;
+            --paper-deep: #0c2249;
+            --line: #1d3c6e;
+            --blue-deep: #050f24;
+            --blue: #11295a;
+            --blue-bright: #3d72d4;
+            --blue-pale: #122d5c;
+            --gold: #d9a440;
+            --good: #4fd497;
+            --good-bg: #0f3a2c;
+            --warn: #e3a256;
+            --warn-bg: #3a2a10;
+            --bad: #ef7269;
+            --bad-bg: #3a1414;
+            --deal: #6fc3f2;
+            --deal-bg: #102e44;
+            --neutral: #9aacc8;
+            --neutral-bg: #16294a;
+        }
+
+        * { box-sizing: border-box; }
+
         body {
             font-family: 'Inter', sans-serif;
-            background: #f6faff;
-            color: #0b1d3a;
+            background: var(--paper);
+            color: var(--ink);
+            margin: 0;
             -webkit-font-smoothing: antialiased;
-            padding: 0 1rem;
         }
 
-        /* ----- Container ----- */
-        .container {
-            max-width: 1200px;
+        .display {
+            font-family: 'Fraunces', serif;
+            font-optical-sizing: auto;
+        }
+
+        .mono {
+            font-family: 'IBM Plex Mono', monospace;
+            letter-spacing: 0.06em;
+        }
+
+        /* ---------- Hero ---------- */
+        .hero {
+            position: relative;
+            background: linear-gradient(165deg, var(--blue-deep) 0%, var(--blue) 62%, var(--blue-bright) 100%);
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .hero-grain {
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(circle at 18% 25%, rgba(255,255,255,0.10) 0, transparent 35%),
+                radial-gradient(circle at 82% 75%, rgba(255,255,255,0.08) 0, transparent 40%);
+            pointer-events: none;
+        }
+
+        .scan-field {
+            position: absolute;
+            top: 0; right: 0;
+            width: 46%;
+            height: 100%;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .hero-inner {
+            position: relative;
+            z-index: 1;
+            max-width: 1120px;
             margin: 0 auto;
-            padding: 1rem 0 3rem;
+            padding: 3.25rem 1.75rem 3rem;
         }
 
-        /* ----- Header ----- */
-        .header {
-            text-align: center;
-            padding: 2rem 0 1.5rem;
-        }
-        .header h1 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: #0b2b6b;
-            letter-spacing: -0.02em;
-        }
-        .header p {
-            font-size: 1.1rem;
-            color: #3a5780;
-            margin-top: 0.2rem;
+        .brand-mark {
+            font-size: clamp(2.1rem, 4.5vw, 2.9rem);
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            margin: 0;
         }
 
-        /* ----- Search card ----- */
+        /* ---------- Search ---------- */
+        .search-wrap {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 0 1.75rem;
+        }
+
         .search-card {
             background: #ffffff;
-            border-radius: 20px;
-            box-shadow: 0 8px 30px rgba(0, 20, 60, 0.08);
-            padding: 1.5rem 1.25rem;
-            margin-bottom: 2.5rem;
-            border: 1px solid #e4ecf7;
+            border-radius: 18px;
+            box-shadow: 0 24px 48px -20px rgba(0,0,0,0.45), 0 1px 0 rgba(0,0,0,0.05);
+            border: 1px solid var(--line);
+            padding: 1.75rem;
+            margin-top: -2.75rem;
+            position: relative;
+            z-index: 2;
         }
 
         .search-form {
             display: flex;
+            gap: 1rem;
             flex-direction: column;
-            gap: 0.75rem;
         }
 
-        @media (min-width: 640px) {
-            .search-form {
-                flex-direction: row;
-                align-items: flex-end;
-                gap: 1rem;
-            }
-            .search-field { flex: 1; }
+        @media (min-width: 768px) {
+            .search-form { flex-direction: row; align-items: flex-end; }
         }
+
+        .search-field { flex: 1; }
 
         .search-field label {
             display: block;
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             font-weight: 600;
-            color: #1a3b6b;
+            color: #0a2257;
             text-transform: uppercase;
-            letter-spacing: 0.04em;
-            margin-bottom: 0.4rem;
+            letter-spacing: 0.06em;
+            margin-bottom: 0.55rem;
         }
 
         .search-field input {
             width: 100%;
-            border: 1.5px solid #dce7f5;
+            border: 1.5px solid #d7e3f3;
             border-radius: 12px;
-            padding: 0.9rem 1rem;
-            font-size: 1rem;
-            background: #f9fcff;
-            transition: 0.15s ease;
-            color: #0b1d3a;
+            padding: 1rem 1.15rem;
+            font-size: 1.05rem;
+            color: #0d2240;
+            background: #f3f7fd;
+            transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
         }
+
+        .search-field input::placeholder { color: #93a4bd; }
 
         .search-field input:focus {
             outline: none;
-            border-color: #2e6bcf;
-            background: #ffffff;
-            box-shadow: 0 0 0 4px #dce7f9;
+            border-color: var(--blue-bright);
+            background: #fff;
+            box-shadow: 0 0 0 4px #dde9fb;
         }
 
-        .search-field input::placeholder {
-            color: #96abc9;
-        }
-
-        .search-btn {
-            background: #1a4b8c;
+        .search-submit {
+            background: #0a2257;
             color: #fff;
             font-weight: 600;
             font-size: 1rem;
             border: none;
             border-radius: 12px;
-            padding: 0.9rem 2rem;
+            padding: 1rem 2.1rem;
             cursor: pointer;
-            transition: background 0.15s ease;
+            transition: background 0.15s ease, transform 0.1s ease;
             white-space: nowrap;
-            min-height: 52px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
-        .search-btn:hover {
-            background: #0f3a70;
+        .search-submit:hover { background: var(--blue-bright); }
+        .search-submit:active { transform: translateY(1px); }
+        .search-submit:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+
+        /* ---------- Results header ---------- */
+        .results-wrap {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 3rem 1.75rem 5rem;
         }
 
-        /* ----- Results header ----- */
-        .results-header {
+        .results-head {
             display: flex;
             justify-content: space-between;
             align-items: baseline;
             flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 2px solid #e4ecf7;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.1rem;
+            border-bottom: 1.5px solid var(--line);
         }
 
-        .results-header h2 {
-            font-size: 1.4rem;
+        .results-head h2 {
+            font-family: 'Fraunces', serif;
+            font-size: 1.65rem;
             font-weight: 600;
-            color: #0b1d3a;
+            color: #ffffff;
+            margin: 0;
         }
 
-        .results-header h2 .highlight {
-            color: #1a4b8c;
+        .results-head h2 .q {
+            color: var(--blue-bright);
         }
 
-        .results-header .count {
-            font-size: 0.9rem;
-            color: #4e6e96;
+        .results-count {
+            font-size: 0.85rem;
+            color: var(--ink-soft);
         }
 
-        /* ----- Empty state ----- */
-        .empty-state {
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 3rem 1.5rem;
+        .results-count .n {
+            font-family: 'IBM Plex Mono', monospace;
+            font-weight: 500;
+            color: var(--blue-bright);
+        }
+
+        /* ---------- Empty / no-results states ---------- */
+        .state-card {
+            background: var(--paper-deep);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 3.5rem 2rem;
             text-align: center;
-            border: 1px dashed #cbdae9;
-        }
-        .empty-state .icon {
-            font-size: 3rem;
-            margin-bottom: 0.75rem;
-        }
-        .empty-state p {
-            font-size: 1rem;
-            color: #3a5780;
-            max-width: 400px;
-            margin: 0 auto;
-        }
-        .empty-state .hint {
-            font-size: 0.9rem;
-            color: #7b94b5;
-            margin-top: 0.4rem;
         }
 
-        /* ----- Product grid (responsive) ----- */
+        .state-card .mark {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto;
+            color: var(--blue-bright);
+            opacity: 0.85;
+        }
+
+        .state-card p.primary {
+            font-size: 1.1rem;
+            color: var(--ink);
+            margin: 0 0 0.4rem;
+            font-weight: 500;
+        }
+
+        .state-card p.secondary {
+            font-size: 0.9rem;
+            color: var(--ink-soft);
+            margin: 0;
+        }
+
+        /* ---------- Product grid ---------- */
         .grid {
             display: grid;
             gap: 1.5rem;
-            grid-template-columns: 1fr;
         }
 
-        @media (min-width: 600px) {
-            .grid { grid-template-columns: repeat(2, 1fr); }
-        }
+        /* --- Responsive grid columns --- */
+        .grid { grid-template-columns: 1fr; }
+        @media (min-width: 700px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 1040px) { .grid { grid-template-columns: repeat(3, 1fr); } }
 
-        @media (min-width: 1024px) {
-            .grid { grid-template-columns: repeat(3, 1fr); }
-        }
-
-        /* ----- Product card ----- */
         .card {
-            background: #ffffff;
+            background: #fff;
+            border: 1px solid #e3ecf9;
             border-radius: 16px;
-            padding: 1.25rem;
-            border: 1px solid #e4ecf7;
-            box-shadow: 0 4px 12px rgba(0, 20, 60, 0.04);
-            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            padding: 1.5rem;
+            transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
             display: flex;
             flex-direction: column;
         }
 
         .card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 12px 28px rgba(0, 20, 60, 0.08);
-            border-color: #bdd1ea;
+            box-shadow: 0 16px 32px -16px rgba(0,0,0,0.45);
+            border-color: #c2d6f0;
         }
 
         .card-top {
@@ -207,236 +273,418 @@
             justify-content: space-between;
             align-items: flex-start;
             gap: 0.75rem;
-            margin-bottom: 0.75rem;
+            margin-bottom: 1rem;
         }
 
         .card-title {
-            font-size: 1rem;
+            font-size: 1.05rem;
             font-weight: 600;
-            color: #0b1d3a;
-            line-height: 1.3;
+            color: #0d2240;
+            line-height: 1.35;
+            margin: 0;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
-            flex: 1;
         }
 
         .pill {
             flex-shrink: 0;
-            padding: 0.25rem 0.6rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.3rem 0.7rem;
             font-size: 0.7rem;
             font-weight: 600;
             border-radius: 999px;
-            text-transform: capitalize;
             white-space: nowrap;
+            text-transform: capitalize;
         }
-        .pill-fair { background: #e2f4e9; color: #0c6b3a; }
-        .pill-overpriced { background: #fdf1e0; color: #a86b1a; }
-        .pill-extreme_overpriced { background: #fce6e3; color: #b3261e; }
-        .pill-underpriced_good_deal { background: #dcecfb; color: #0d5d8a; }
+
+        .pill::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        .pill-fair { background: #e6f7ee; color: #0f6e3f; }
+        .pill-fair::before { background: #0f6e3f; }
+
+        .pill-overpriced { background: #fbf0de; color: #a3621a; }
+        .pill-overpriced::before { background: #a3621a; }
+
+        .pill-extreme_overpriced { background: #fbe9e7; color: #b3261e; }
+        .pill-extreme_overpriced::before { background: #b3261e; }
+
+        .pill-underpriced_good_deal { background: #e2f1fb; color: #0c5d8a; }
+        .pill-underpriced_good_deal::before { background: #0c5d8a; }
+
         .pill-insufficient_data,
-        .pill-unknown { background: #edf2f8; color: #5d718c; }
+        .pill-unknown { background: #eef1f5; color: #5d6f83; }
+        .pill-insufficient_data::before,
+        .pill-unknown::before { background: #5d6f83; }
 
         .card-price {
-            margin: 0.5rem 0 0.75rem;
+            margin-bottom: 1.1rem;
         }
+
         .card-price .amount {
-            font-size: 1.7rem;
-            font-weight: 700;
-            color: #0b2b6b;
+            font-family: 'Fraunces', serif;
+            font-size: 2.1rem;
+            font-weight: 600;
+            color: #0a2257;
+            letter-spacing: -0.01em;
         }
+
         .card-price .currency {
-            font-size: 0.9rem;
-            color: #4e6e96;
-            margin-left: 0.2rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #5d7095;
+            margin-left: 0.35rem;
         }
 
         .card-meta {
-            font-size: 0.85rem;
-            color: #4e6e96;
+            font-size: 0.88rem;
+            color: #5d7095;
             display: flex;
             flex-direction: column;
-            gap: 0.3rem;
+            gap: 0.45rem;
             margin-bottom: auto;
         }
+
         .card-meta .row {
             display: flex;
-            gap: 0.4rem;
+            gap: 0.5rem;
             align-items: baseline;
-            flex-wrap: wrap;
         }
+
         .card-meta .row strong {
-            color: #1a3b6b;
+            color: #0d2240;
             font-weight: 500;
+        }
+
+        .card-meta .icon {
+            width: 15px;
+            height: 15px;
+            flex-shrink: 0;
+            color: #2e5bb0;
+            position: relative;
+            top: 1px;
         }
 
         .card-category {
             display: inline-block;
-            font-size: 0.7rem;
+            font-size: 0.72rem;
             font-weight: 600;
-            color: #1a4b8c;
-            background: #e8effa;
-            padding: 0.2rem 0.6rem;
+            color: #2e5bb0;
+            background: #e8f0fc;
+            padding: 0.25rem 0.65rem;
             border-radius: 999px;
-            margin-top: 0.3rem;
+            margin-top: 0.4rem;
             width: fit-content;
         }
 
         .card-footer {
-            margin-top: 1rem;
-            padding-top: 0.8rem;
-            border-top: 1px solid #e4ecf7;
+            margin-top: 1.25rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e3ecf9;
         }
 
         .card-link {
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: #1a4b8c;
-            text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 0.3rem;
+            gap: 0.4rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #2e5bb0;
+            text-decoration: none;
+            transition: gap 0.15s ease, color 0.15s ease;
         }
 
         .card-link:hover {
-            color: #0b2b6b;
-            text-decoration: underline;
+            color: #0a2257;
+            gap: 0.6rem;
         }
+
+        .card-link svg { transition: transform 0.15s ease; }
+        .card-link:hover svg { transform: translateX(2px); }
 
         .no-link {
-            font-size: 0.85rem;
-            color: #96abc9;
-        }
-
-        /* ----- Footer ----- */
-        .footer {
-            text-align: center;
-            padding: 2rem 0 1.5rem;
-            color: #4e6e96;
             font-size: 0.9rem;
-            border-top: 1px solid #e4ecf7;
-            margin-top: 2.5rem;
+            color: #aab8cc;
         }
 
-        .footer a {
-            color: #1a4b8c;
+        /* ---------- Footer ---------- */
+        footer {
+            background: var(--blue-deep);
+            color: rgba(255,255,255,0.85);
+            padding: 2.75rem 1.75rem;
+        }
+
+        .footer-inner {
+            max-width: 1120px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-inner a {
+            color: #9cc5ff;
             text-decoration: none;
             font-weight: 600;
         }
-        .footer a:hover {
-            text-decoration: underline;
-        }
-        .footer .copyright {
-            font-size: 0.8rem;
-            color: #7b94b5;
-            margin-top: 0.4rem;
+
+        .footer-inner a:hover { text-decoration: underline; }
+
+        .footer-inner .copyright {
+            font-size: 0.78rem;
+            color: rgba(255,255,255,0.45);
+            margin-top: 1.1rem;
         }
 
-        /* ----- Spacing tweaks for tiny screens ----- */
-        @media (max-width: 400px) {
-            .header h1 { font-size: 1.8rem; }
-            .search-card { padding: 1rem; }
-            .search-btn { font-size: 0.9rem; padding: 0.7rem 1.2rem; }
-            .card { padding: 1rem; }
-            .card-price .amount { font-size: 1.4rem; }
+        /* ----- RESPONSIVE TWEAKS (only added, not changing design) ----- */
+
+        /* Small screens: reduce padding, scale down fonts, stack elements */
+        @media (max-width: 768px) {
+            .hero-inner {
+                padding: 2rem 1rem 1.8rem;
+            }
+            .brand-mark {
+                font-size: 1.9rem;
+            }
+            .search-wrap {
+                padding: 0 1rem;
+            }
+            .search-card {
+                padding: 1.25rem;
+                margin-top: -2rem;
+            }
+            .search-form {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+            .search-submit {
+                width: 100%;
+                justify-content: center;
+                padding: 0.9rem;
+            }
+            .search-field input {
+                font-size: 0.95rem;
+                padding: 0.85rem 1rem;
+            }
+            .results-wrap {
+                padding: 1.5rem 1rem 3rem;
+            }
+            .results-head {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.3rem;
+            }
+            .results-head h2 {
+                font-size: 1.3rem;
+            }
+            .card {
+                padding: 1.2rem;
+            }
+            .card-price .amount {
+                font-size: 1.6rem;
+            }
+            .card-title {
+                font-size: 0.95rem;
+            }
+            .scan-field {
+                opacity: 0.2;
+                width: 100%;
+            }
+            footer {
+                padding: 2rem 1.25rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-inner {
+                padding: 1.5rem 0.75rem 1.2rem;
+            }
+            .brand-mark {
+                font-size: 1.5rem;
+            }
+            .search-card {
+                padding: 1rem;
+                margin-top: -1.5rem;
+                border-radius: 14px;
+            }
+            .search-field input {
+                font-size: 0.9rem;
+                padding: 0.7rem 0.9rem;
+            }
+            .search-submit {
+                font-size: 0.9rem;
+                padding: 0.7rem;
+            }
+            .results-head h2 {
+                font-size: 1.1rem;
+            }
+            .results-count {
+                font-size: 0.75rem;
+            }
+            .card {
+                padding: 0.9rem;
+            }
+            .card-price .amount {
+                font-size: 1.4rem;
+            }
+            .card-title {
+                font-size: 0.9rem;
+            }
+            .card-meta {
+                font-size: 0.78rem;
+            }
+            .state-card {
+                padding: 2rem 1rem;
+            }
+            .state-card p.primary {
+                font-size: 0.95rem;
+            }
+            .state-card p.secondary {
+                font-size: 0.8rem;
+            }
+            .footer-inner {
+                font-size: 0.85rem;
+            }
         }
     </style>
 </head>
 <body>
-
-<div class="container">
-
-    <!-- Header -->
-    <div class="header">
-        <h1>🔍 FairFind</h1>
-        <p>AI‑powered price fairness for Ethiopian marketplaces</p>
+    <!-- All your HTML remains exactly the same -->
+    <div class="hero">
+        <div class="hero-grain"></div>
+        <svg class="scan-field" viewBox="0 0 500 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <circle cx="80" cy="90" r="3" fill="#ffffff" opacity="0.35"/>
+            <circle cx="150" cy="60" r="2.5" fill="#ffffff" opacity="0.25"/>
+            <circle cx="230" cy="120" r="3.5" fill="#ffd166" opacity="0.5"/>
+            <circle cx="310" cy="70" r="2.5" fill="#ffffff" opacity="0.3"/>
+            <circle cx="120" cy="190" r="3" fill="#ffffff" opacity="0.3"/>
+            <circle cx="270" cy="200" r="2.5" fill="#ffffff" opacity="0.25"/>
+            <circle cx="370" cy="150" r="3.5" fill="#ffd166" opacity="0.45"/>
+            <circle cx="60" cy="290" r="2.5" fill="#ffffff" opacity="0.3"/>
+            <circle cx="200" cy="300" r="3" fill="#ffffff" opacity="0.35"/>
+            <circle cx="340" cy="270" r="2.5" fill="#ffffff" opacity="0.25"/>
+            <circle cx="420" cy="220" r="3" fill="#ffffff" opacity="0.3"/>
+            <circle cx="160" cy="380" r="3.5" fill="#ffd166" opacity="0.5"/>
+            <circle cx="300" cy="400" r="2.5" fill="#ffffff" opacity="0.25"/>
+            <circle cx="400" cy="350" r="3" fill="#ffffff" opacity="0.3"/>
+            <circle cx="90" cy="440" r="2.5" fill="#ffffff" opacity="0.3"/>
+            <circle cx="250" cy="450" r="2.5" fill="#ffffff" opacity="0.25"/>
+            <circle cx="250" cy="250" r="60" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+            <circle cx="250" cy="250" r="110" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.13"/>
+            <circle cx="250" cy="250" r="165" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.09"/>
+            <circle cx="250" cy="250" r="225" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.06"/>
+        </svg>
+        <div class="hero-inner">
+            <h1 class="display brand-mark">FairFind</h1>
+        </div>
     </div>
 
-    <!-- Search card -->
-    <div class="search-card">
-        <form method="GET" action="/" class="search-form">
-            <div class="search-field">
-                <label for="q">What are you looking for?</label>
-                <input type="text" id="q" name="q" value="<%= query %>" placeholder="e.g. serum, Nike shoes, iPhone 13, study desk" autocomplete="off">
+    <div class="search-wrap">
+        <div class="search-card">
+            <form method="GET" action="/" class="search-form">
+                <div class="search-field">
+                    <label for="q">What are you looking for?</label>
+                    <input type="text" id="q" name="q" value="<%= query %>" placeholder="e.g. serum, Nike shoes, iPhone 13, study desk" autocomplete="off">
+                </div>
+                <button type="submit" class="search-submit">Search listings</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="results-wrap">
+        <% if (query.trim()) { %>
+            <div class="results-head">
+                <h2 class="display">Results for <span class="q">"<%= query %>"</span></h2>
+                <span class="results-count"><span class="n"><%= products.length %></span> listing<%= products.length === 1 ? '' : 's' %> found</span>
             </div>
-            <button type="submit" class="search-btn">Search</button>
-        </form>
-    </div>
-
-    <!-- Results header or empty state -->
-    <% if (query.trim()) { %>
-        <div class="results-header">
-            <h2>Results for <span class="highlight">“<%= query %>”</span></h2>
-            <span class="count"><%= products.length %> listing<%= products.length === 1 ? '' : 's' %></span>
-        </div>
-    <% } else { %>
-        <div class="empty-state">
-            <div class="icon">🔎</div>
-            <p>Enter a search term above to find products with AI fairness scores.</p>
-            <p class="hint">Example: “serum”, “shoes”, “phone”</p>
-        </div>
-    <% } %>
-
-    <!-- No results -->
-    <% if (query.trim() && products.length === 0) { %>
-        <div class="empty-state">
-            <div class="icon">😕</div>
-            <p>No listings found for “<%= query %>”.</p>
-            <p class="hint">Try a shorter or more general term.</p>
-        </div>
-    <% } %>
-
-    <!-- Product grid -->
-    <div class="grid">
-        <% for (var i = 0; i < products.length; i++) {
-            var product = products[i]; %>
-            <div class="card">
-                <div class="card-top">
-                    <h3 class="card-title"><%= product.item_name ? product.item_name : 'Unnamed listing' %></h3>
-                    <span class="pill pill-<%= product.fairness_status || 'unknown' %>">
-                        <%= product.fairness_status ? product.fairness_status.replace(/_/g, ' ') : 'unknown' %>
-                    </span>
-                </div>
-
-                <div class="card-price">
-                    <span class="amount"><%= product.price ? product.price.toLocaleString() : '—' %></span>
-                    <span class="currency"><%= product.currency || 'ETB' %></span>
-                </div>
-
-                <div class="card-meta">
-                    <% if (product.condition) { %>
-                        <div class="row"><strong>Condition:</strong> <%= product.condition %></div>
-                    <% } %>
-                    <% if (product.location) { %>
-                        <div class="row"><strong>📍</strong> <%= product.location %></div>
-                    <% } %>
-                    <% if (product.contact_info) { %>
-                        <div class="row"><strong>📞</strong> <%= product.contact_info %></div>
-                    <% } %>
-                    <% if (product.category) { %>
-                        <span class="card-category"><%= product.category %></span>
-                    <% } %>
-                </div>
-
-                <div class="card-footer">
-                    <% if (product.message_url) { %>
-                        <a href="<%= product.message_url %>" target="_blank" class="card-link">🔗 View original post →</a>
-                    <% } else { %>
-                        <span class="no-link">🔗 No link available</span>
-                    <% } %>
-                </div>
+        <% } else { %>
+            <div class="state-card">
+                <svg class="mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <circle cx="10.5" cy="10.5" r="6.5"/>
+                    <path d="M15.2 15.2L21 21" stroke-linecap="round"/>
+                    <path d="M10.5 7.5v6M7.5 10.5h6" stroke-linecap="round" opacity="0.6"/>
+                </svg>
             </div>
         <% } %>
+
+        <% if (query.trim() && products.length === 0) { %>
+            <div class="state-card">
+                <svg class="mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <circle cx="11" cy="11" r="7.5"/>
+                    <path d="M16.5 16.5L21 21" stroke-linecap="round"/>
+                    <path d="M8.5 13.2c0 1.5 1.1 2.3 2.5 2.3s2.5-.8 2.5-2c0-1-.6-1.5-1.7-1.9l-1.6-.6c-1.1-.4-1.7-1-1.7-1.9 0-1.2 1.1-2 2.5-2s2.5.8 2.5 2" stroke-linecap="round"/>
+                </svg>
+                <p class="primary">No listings found for "<%= query %>".</p>
+                <p class="secondary">Try a shorter or more general term.</p>
+            </div>
+        <% } %>
+
+        <div class="grid">
+            <% for (var i = 0; i < products.length; i++) {
+                var product = products[i]; %>
+                <div class="card">
+                    <div class="card-top">
+                        <h3 class="card-title"><%= product.item_name ? product.item_name : 'Unnamed listing' %></h3>
+                        <span class="pill pill-<%= product.fairness_status || 'unknown' %>">
+                            <%= product.fairness_status ? product.fairness_status.replace(/_/g, ' ') : 'unknown' %>
+                        </span>
+                    </div>
+
+                    <div class="card-price">
+                        <span class="amount"><%= product.price ? product.price.toLocaleString() : '—' %></span>
+                        <span class="currency"><%= product.currency || 'ETB' %></span>
+                    </div>
+
+                    <div class="card-meta">
+                        <% if (product.condition) { %>
+                            <div class="row">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12l4 4L20 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                <span>Condition: <strong><%= product.condition %></strong></span>
+                            </div>
+                        <% } %>
+                        <% if (product.location) { %>
+                            <div class="row">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.2-7-11a7 7 0 1114 0c0 4.8-7 11-7 11z" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.3"/></svg>
+                                <span><%= product.location %></span>
+                            </div>
+                        <% } %>
+                        <% if (product.contact_info) { %>
+                            <div class="row">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16v14H4z" stroke-linejoin="round"/><path d="M4 6l8 7 8-7" stroke-linejoin="round"/></svg>
+                                <span><%= product.contact_info %></span>
+                            </div>
+                        <% } %>
+                        <% if (product.category) { %>
+                            <span class="card-category"><%= product.category %></span>
+                        <% } %>
+                    </div>
+
+                    <div class="card-footer">
+                        <% if (product.message_url) { %>
+                            <a href="<%= product.message_url %>" target="_blank" class="card-link">
+                                View original post
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M7 17L17 7M7 7h10v10" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </a>
+                        <% } else { %>
+                            <span class="no-link">No link available</span>
+                        <% } %>
+                    </div>
+                </div>
+            <% } %>
+        </div>
     </div>
 
-    <!-- Footer -->
-    <div class="footer">
-        <p>🤖 Try our Telegram bot: <a href="https://t.me/FairFindBot" target="_blank">@FairFindBot</a></p>
-        <p class="copyright">© 2026 FairFind – Built with ❤️ for Ethiopian shoppers</p>
-    </div>
-
-</div>
-
+    <footer>
+        <div class="footer-inner">
+            <p>Try our Telegram bot: <a href="https://t.me/FairFindBot" target="_blank">@FairFindBot</a></p>
+            <p class="copyright">© 2026 FairFind</p>
+        </div>
+    </footer>
 </body>
 </html>
