@@ -4,142 +4,588 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>FairFind – Ethiopian Marketplace Search</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --ink: #eaf1fb;
+            --ink-soft: #9db3d4;
+            --paper: #081a3a;
+            --paper-deep: #0c2249;
+            --line: #1d3c6e;
+            --blue-deep: #050f24;
+            --blue: #11295a;
+            --blue-bright: #3d72d4;
+            --blue-pale: #122d5c;
+            --gold: #d9a440;
+            --good: #4fd497;
+            --good-bg: #0f3a2c;
+            --warn: #e3a256;
+            --warn-bg: #3a2a10;
+            --bad: #ef7269;
+            --bad-bg: #3a1414;
+            --deal: #6fc3f2;
+            --deal-bg: #102e44;
+            --neutral: #9aacc8;
+            --neutral-bg: #16294a;
+        }
+
+        * { box-sizing: border-box; }
+
         body {
             font-family: 'Inter', sans-serif;
-            background: #f5f9ff;
+            background: var(--paper);
+            color: var(--ink);
+            margin: 0;
+            -webkit-font-smoothing: antialiased;
         }
-        .fairness-pill {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            font-size: 0.75rem;
+
+        .display {
+            font-family: 'Fraunces', serif;
+            font-optical-sizing: auto;
+        }
+
+        .mono {
+            font-family: 'IBM Plex Mono', monospace;
+            letter-spacing: 0.06em;
+        }
+
+        /* ---------- Hero ---------- */
+        .hero {
+            position: relative;
+            background: linear-gradient(165deg, var(--blue-deep) 0%, var(--blue) 62%, var(--blue-bright) 100%);
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .hero-grain {
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(circle at 18% 25%, rgba(255,255,255,0.10) 0, transparent 35%),
+                radial-gradient(circle at 82% 75%, rgba(255,255,255,0.08) 0, transparent 40%);
+            pointer-events: none;
+        }
+
+        .scan-field {
+            position: absolute;
+            top: 0; right: 0;
+            width: 46%;
+            height: 100%;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        @media (max-width: 768px) {
+            .scan-field { display: none; }
+        }
+
+        .hero-inner {
+            position: relative;
+            z-index: 1;
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 3.25rem 1.75rem 3rem;
+        }
+
+        .brand-mark {
+            font-size: clamp(2.1rem, 4.5vw, 2.9rem);
             font-weight: 600;
-            border-radius: 9999px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            letter-spacing: -0.01em;
+            margin: 0;
         }
-        .fairness-fair { background-color: #e6f9ed; color: #0f6e3f; }
-        .fairness-overpriced { background-color: #fff3e0; color: #b45f06; }
-        .fairness-extreme_overpriced { background-color: #ffe6e5; color: #b91c1c; }
-        .fairness-underpriced_good_deal { background-color: #e0f2fe; color: #0c4e6e; }
-        .fairness-insufficient_data { background-color: #f0f2f5; color: #5d6f83; }
-        .fairness-unknown { background-color: #f0f2f5; color: #5d6f83; }
-        .product-card {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+        /* ---------- Search ---------- */
+        .search-wrap {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 0 1.75rem;
         }
-        .product-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.1);
+
+        .search-card {
+            background: #ffffff;
+            border-radius: 18px;
+            box-shadow: 0 24px 48px -20px rgba(0,0,0,0.45), 0 1px 0 rgba(0,0,0,0.05);
+            border: 1px solid var(--line);
+            padding: 1.75rem;
+            margin-top: -2.75rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 1rem;
+            flex-direction: column;
+        }
+
+        @media (min-width: 768px) {
+            .search-form { flex-direction: row; align-items: flex-end; }
+        }
+
+        .search-field { flex: 1; }
+
+        .search-field label {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #0a2257;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 0.55rem;
+        }
+
+        .search-field input {
+            width: 100%;
+            border: 1.5px solid #d7e3f3;
+            border-radius: 12px;
+            padding: 1rem 1.15rem;
+            font-size: 1.05rem;
+            color: #0d2240;
+            background: #f3f7fd;
+            transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .search-field input::placeholder { color: #93a4bd; }
+
+        .search-field input:focus {
+            outline: none;
+            border-color: var(--blue-bright);
+            background: #fff;
+            box-shadow: 0 0 0 4px #dde9fb;
+        }
+
+        .search-submit {
+            background: #0a2257;
+            color: #fff;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            border-radius: 12px;
+            padding: 1rem 2.1rem;
+            cursor: pointer;
+            transition: background 0.15s ease, transform 0.1s ease;
+            white-space: nowrap;
+        }
+
+        .search-submit:hover { background: var(--blue-bright); }
+        .search-submit:active { transform: translateY(1px); }
+        .search-submit:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+
+        /* ---------- Results header ---------- */
+        .results-wrap {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 3rem 1.75rem 5rem;
+        }
+
+        .results-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.1rem;
+            border-bottom: 1.5px solid var(--line);
+        }
+
+        .results-head h2 {
+            font-family: 'Fraunces', serif;
+            font-size: 1.65rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin: 0;
+        }
+
+        .results-head h2 .q {
+            color: var(--blue-bright);
+        }
+
+        .results-count {
+            font-size: 0.85rem;
+            color: var(--ink-soft);
+        }
+
+        .results-count .n {
+            font-family: 'IBM Plex Mono', monospace;
+            font-weight: 500;
+            color: var(--blue-bright);
+        }
+
+        /* ---------- Empty / no-results states ---------- */
+        .state-card {
+            background: var(--paper-deep);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 3.5rem 2rem;
+            text-align: center;
+        }
+
+        .state-card .mark {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto;
+            color: var(--blue-bright);
+            opacity: 0.85;
+        }
+
+        .state-card p.primary {
+            font-size: 1.1rem;
+            color: var(--ink);
+            margin: 0 0 0.4rem;
+            font-weight: 500;
+        }
+
+        .state-card p.secondary {
+            font-size: 0.9rem;
+            color: var(--ink-soft);
+            margin: 0;
+        }
+
+        /* ---------- Product grid ---------- */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 700px) {
+            .grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (min-width: 1040px) {
+            .grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #e3ecf9;
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 32px -16px rgba(0,0,0,0.45);
+            border-color: #c2d6f0;
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #0d2240;
+            line-height: 1.35;
+            margin: 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .pill {
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.3rem 0.7rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            border-radius: 999px;
+            white-space: nowrap;
+            text-transform: capitalize;
+        }
+
+        .pill::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        .pill-fair { background: #e6f7ee; color: #0f6e3f; }
+        .pill-fair::before { background: #0f6e3f; }
+
+        .pill-overpriced { background: #fbf0de; color: #a3621a; }
+        .pill-overpriced::before { background: #a3621a; }
+
+        .pill-extreme_overpriced { background: #fbe9e7; color: #b3261e; }
+        .pill-extreme_overpriced::before { background: #b3261e; }
+
+        .pill-underpriced_good_deal { background: #e2f1fb; color: #0c5d8a; }
+        .pill-underpriced_good_deal::before { background: #0c5d8a; }
+
+        .pill-insufficient_data,
+        .pill-unknown { background: #eef1f5; color: #5d6f83; }
+        .pill-insufficient_data::before,
+        .pill-unknown::before { background: #5d6f83; }
+
+        .card-price {
+            margin-bottom: 1.1rem;
+        }
+
+        .card-price .amount {
+            font-family: 'Fraunces', serif;
+            font-size: 2.1rem;
+            font-weight: 600;
+            color: #0a2257;
+            letter-spacing: -0.01em;
+        }
+
+        .card-price .currency {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #5d7095;
+            margin-left: 0.35rem;
+        }
+
+        .card-meta {
+            font-size: 0.88rem;
+            color: #5d7095;
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+            margin-bottom: auto;
+        }
+
+        .card-meta .row {
+            display: flex;
+            gap: 0.5rem;
+            align-items: baseline;
+        }
+
+        .card-meta .row strong {
+            color: #0d2240;
+            font-weight: 500;
+        }
+
+        .card-meta .icon {
+            width: 15px;
+            height: 15px;
+            flex-shrink: 0;
+            color: #2e5bb0;
+            position: relative;
+            top: 1px;
+        }
+
+        .card-category {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: #2e5bb0;
+            background: #e8f0fc;
+            padding: 0.25rem 0.65rem;
+            border-radius: 999px;
+            margin-top: 0.4rem;
+            width: fit-content;
+        }
+
+        .card-footer {
+            margin-top: 1.25rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e3ecf9;
+        }
+
+        .card-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #2e5bb0;
+            text-decoration: none;
+            transition: gap 0.15s ease, color 0.15s ease;
+        }
+
+        .card-link:hover {
+            color: #0a2257;
+            gap: 0.6rem;
+        }
+
+        .card-link svg { transition: transform 0.15s ease; }
+        .card-link:hover svg { transform: translateX(2px); }
+
+        .no-link {
+            font-size: 0.9rem;
+            color: #aab8cc;
+        }
+
+        /* ---------- Footer ---------- */
+        footer {
+            background: var(--blue-deep);
+            color: rgba(255,255,255,0.85);
+            padding: 2.75rem 1.75rem;
+        }
+
+        .footer-inner {
+            max-width: 1120px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-inner a {
+            color: #9cc5ff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer-inner a:hover { text-decoration: underline; }
+
+        .footer-inner .copyright {
+            font-size: 0.78rem;
+            color: rgba(255,255,255,0.45);
+            margin-top: 1.1rem;
         }
     </style>
 </head>
-<body class="bg-gradient-to-b from-white to-blue-50">
+<body>
 
-    <!-- Hero Section -->
-    <div class="bg-gradient-to-r from-blue-700 to-indigo-700 text-white shadow-lg">
-        <div class="container mx-auto px-6 py-16 text-center">
-            <h1 class="text-5xl md:text-6xl font-bold tracking-tight mb-3">FairFind</h1>
-            <p class="text-xl md:text-2xl font-light opacity-95 max-w-2xl mx-auto">Smart search for Ethiopian Telegram marketplaces – get fair prices instantly.</p>
-            <p class="text-blue-100 mt-4">🔍 Search · Fairness scores · Direct links</p>
+    <!-- Hero -->
+    <div class="hero">
+        <div class="hero-grain"></div>
+        <svg class="scan-field" viewBox="0 0 500 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <!-- scattered "listing" dots being resolved by a scanning sweep, echoing many Telegram posts -> one verdict -->
+            <circle cx="80" cy="90" r="3" fill="#ffffff" opacity="0.35"/>
+            <circle cx="150" cy="60" r="2.5" fill="#ffffff" opacity="0.25"/>
+            <circle cx="230" cy="120" r="3.5" fill="#ffd166" opacity="0.5"/>
+            <circle cx="310" cy="70" r="2.5" fill="#ffffff" opacity="0.3"/>
+            <circle cx="120" cy="190" r="3" fill="#ffffff" opacity="0.3"/>
+            <circle cx="270" cy="200" r="2.5" fill="#ffffff" opacity="0.25"/>
+            <circle cx="370" cy="150" r="3.5" fill="#ffd166" opacity="0.45"/>
+            <circle cx="60" cy="290" r="2.5" fill="#ffffff" opacity="0.3"/>
+            <circle cx="200" cy="300" r="3" fill="#ffffff" opacity="0.35"/>
+            <circle cx="340" cy="270" r="2.5" fill="#ffffff" opacity="0.25"/>
+            <circle cx="420" cy="220" r="3" fill="#ffffff" opacity="0.3"/>
+            <circle cx="160" cy="380" r="3.5" fill="#ffd166" opacity="0.5"/>
+            <circle cx="300" cy="400" r="2.5" fill="#ffffff" opacity="0.25"/>
+            <circle cx="400" cy="350" r="3" fill="#ffffff" opacity="0.3"/>
+            <circle cx="90" cy="440" r="2.5" fill="#ffffff" opacity="0.3"/>
+            <circle cx="250" cy="450" r="2.5" fill="#ffffff" opacity="0.25"/>
+            <!-- concentric resolving rings -->
+            <circle cx="250" cy="250" r="60" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+            <circle cx="250" cy="250" r="110" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.13"/>
+            <circle cx="250" cy="250" r="165" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.09"/>
+            <circle cx="250" cy="250" r="225" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.06"/>
+        </svg>
+        <div class="hero-inner">
+            <h1 class="display brand-mark">FairFind</h1>
         </div>
     </div>
 
-    <!-- Search Bar (always visible) -->
-    <div class="container mx-auto px-6 -mt-6">
-        <div class="bg-white rounded-2xl shadow-xl p-6 border border-blue-100">
-            <form method="GET" action="/" class="flex flex-col md:flex-row gap-4">
-                <div class="flex-1">
-                    <label class="block text-blue-800 text-sm font-semibold mb-1">🔎 What are you looking for?</label>
-                    <input type="text" name="q" value="<%= query %>" placeholder="e.g., serum, shoes, phone, book"
-                           class="w-full border border-gray-200 rounded-xl px-5 py-4 text-lg focus:ring-2 focus:ring-blue-300 focus:border-blue-400 transition">
+    <!-- Search -->
+    <div class="search-wrap">
+        <div class="search-card">
+            <form method="GET" action="/" class="search-form">
+                <div class="search-field">
+                    <label for="q">What are you looking for?</label>
+                    <input type="text" id="q" name="q" value="<%= query %>" placeholder="e.g. serum, Nike shoes, iPhone 13, study desk" autocomplete="off">
                 </div>
-                <div class="flex items-end">
-                    <button type="submit" class="bg-blue-700 hover:bg-blue-800 text-white font-semibold px-8 py-4 rounded-xl transition shadow-md hover:shadow-lg">Search</button>
-                </div>
+                <button type="submit" class="search-submit">Search listings</button>
             </form>
         </div>
     </div>
 
-    <!-- Results Section -->
-    <div class="container mx-auto px-6 py-10">
+    <!-- Results -->
+    <div class="results-wrap">
         <% if (query.trim()) { %>
-            <div class="flex justify-between items-end mb-6 flex-wrap gap-4">
-                <h2 class="text-2xl font-bold text-blue-900">
-                    📦 Results for “<%= query %>”
-                    <span class="text-base font-normal text-gray-500 ml-2">(<%= products.length %>)</span>
-                </h2>
+            <div class="results-head">
+                <h2 class="display">Results for <span class="q">"<%= query %>"</span></h2>
+                <span class="results-count"><span class="n"><%= products.length %></span> listing<%= products.length === 1 ? '' : 's' %> found</span>
             </div>
         <% } else { %>
-            <!-- Empty state: show a prompt -->
-            <div class="bg-white/60 backdrop-blur-sm rounded-2xl p-12 text-center shadow-sm border border-blue-100">
-                <div class="text-6xl mb-4">🔍</div>
-                <p class="text-gray-600 text-lg">Enter a search term above to find products with AI fairness scores.</p>
-                <p class="text-gray-500 text-sm mt-2">Example: "serum", "shoes", "phone"</p>
+            <div class="state-card">
+                <svg class="mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <circle cx="10.5" cy="10.5" r="6.5"/>
+                    <path d="M15.2 15.2L21 21" stroke-linecap="round"/>
+                    <path d="M10.5 7.5v6M7.5 10.5h6" stroke-linecap="round" opacity="0.6"/>
+                </svg>
             </div>
         <% } %>
 
         <% if (query.trim() && products.length === 0) { %>
-            <div class="bg-white border border-blue-100 rounded-2xl p-12 text-center shadow-sm">
-                <div class="text-5xl mb-4">😕</div>
-                <p class="text-gray-600 text-lg">No products found for "<%= query %>". Try a different term.</p>
+            <div class="state-card">
+                <svg class="mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <circle cx="11" cy="11" r="7.5"/>
+                    <path d="M16.5 16.5L21 21" stroke-linecap="round"/>
+                    <path d="M8.5 13.2c0 1.5 1.1 2.3 2.5 2.3s2.5-.8 2.5-2c0-1-.6-1.5-1.7-1.9l-1.6-.6c-1.1-.4-1.7-1-1.7-1.9 0-1.2 1.1-2 2.5-2s2.5.8 2.5 2" stroke-linecap="round"/>
+                </svg>
+                <p class="primary">No listings found for "<%= query %>".</p>
+                <p class="secondary">Try a shorter or more general term.</p>
             </div>
         <% } %>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <% for (var i = 0; i < products.length; i++) { 
+        <div class="grid">
+            <% for (var i = 0; i < products.length; i++) {
                 var product = products[i]; %>
-                <div class="product-card bg-white rounded-2xl overflow-hidden shadow-md border border-blue-50 transition-all">
-                    <div class="p-6">
-                        <div class="flex justify-between items-start gap-3">
-                            <h3 class="text-lg font-bold text-gray-800 line-clamp-2">
-                                <%= product.item_name ? product.item_name : 'Unnamed product' %>
-                            </h3>
-                            <span class="fairness-pill fairness-<%= product.fairness_status || 'unknown' %> flex-shrink-0">
-                                <%= product.fairness_status ? product.fairness_status.replace(/_/g, ' ') : 'unknown' %>
-                            </span>
-                        </div>
-                        <div class="mt-4">
-                            <span class="text-3xl font-bold text-blue-700">
-                                <%= product.price ? product.price.toLocaleString() : '?' %>
-                            </span>
-                            <span class="text-gray-500 ml-1"><%= product.currency || 'ETB' %></span>
-                        </div>
-                        <div class="mt-4 space-y-1 text-sm text-gray-600">
-                            <% if (product.condition) { %>
-                                <p>📌 Condition: <span class="font-medium"><%= product.condition %></span></p>
-                            <% } %>
-                            <% if (product.location) { %>
-                                <p>📍 Location: <%= product.location %></p>
-                            <% } %>
-                            <% if (product.contact_info) { %>
-                                <p>📞 Contact: <%= product.contact_info %></p>
-                            <% } %>
-                            <% if (product.category) { %>
-                                <p class="text-xs text-blue-600 bg-blue-50 inline-block px-2 py-0.5 rounded-full mt-2">🏷️ <%= product.category %></p>
-                            <% } %>
-                        </div>
-                        <div class="mt-5 pt-3 border-t border-gray-100">
-                            <% if (product.message_url) { %>
-                                <a href="<%= product.message_url %>" target="_blank" class="text-blue-700 hover:text-blue-900 text-sm font-semibold inline-flex items-center gap-1 transition">
-                                    🔗 View original post <span>→</span>
-                                </a>
-                            <% } else { %>
-                                <span class="text-gray-400 text-sm">🔗 No link available</span>
-                            <% } %>
-                        </div>
+                <div class="card">
+                    <div class="card-top">
+                        <h3 class="card-title"><%= product.item_name ? product.item_name : 'Unnamed listing' %></h3>
+                        <span class="pill pill-<%= product.fairness_status || 'unknown' %>">
+                            <%= product.fairness_status ? product.fairness_status.replace(/_/g, ' ') : 'unknown' %>
+                        </span>
+                    </div>
+
+                    <div class="card-price">
+                        <span class="amount"><%= product.price ? product.price.toLocaleString() : '—' %></span>
+                        <span class="currency"><%= product.currency || 'ETB' %></span>
+                    </div>
+
+                    <div class="card-meta">
+                        <% if (product.condition) { %>
+                            <div class="row">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12l4 4L20 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                <span>Condition: <strong><%= product.condition %></strong></span>
+                            </div>
+                        <% } %>
+                        <% if (product.location) { %>
+                            <div class="row">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.2-7-11a7 7 0 1114 0c0 4.8-7 11-7 11z" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.3"/></svg>
+                                <span><%= product.location %></span>
+                            </div>
+                        <% } %>
+                        <% if (product.contact_info) { %>
+                            <div class="row">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16v14H4z" stroke-linejoin="round"/><path d="M4 6l8 7 8-7" stroke-linejoin="round"/></svg>
+                                <span><%= product.contact_info %></span>
+                            </div>
+                        <% } %>
+                        <% if (product.category) { %>
+                            <span class="card-category"><%= product.category %></span>
+                        <% } %>
+                    </div>
+
+                    <div class="card-footer">
+                        <% if (product.message_url) { %>
+                            <a href="<%= product.message_url %>" target="_blank" class="card-link">
+                                View original post
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M7 17L17 7M7 7h10v10" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </a>
+                        <% } else { %>
+                            <span class="no-link">No link available</span>
+                        <% } %>
                     </div>
                 </div>
             <% } %>
         </div>
     </div>
 
-    <footer class="bg-white border-t border-blue-100 py-8 mt-12">
-        <div class="container mx-auto px-6 text-center text-gray-500 text-sm">
-            <p>FairFind – AI‑powered price transparency for Ethiopian marketplaces.</p>
-            <p class="mt-1">🤖 Try our Telegram bot: <a href="https://t.me/FairFindBot" target="_blank" class="text-blue-600 hover:underline">@FairFindBot</a></p>
-            <p class="mt-2 text-xs text-gray-400">© 2026 FairFind</p>
-        </div>S
+    <footer>
+        <div class="footer-inner">
+            <p>Try our Telegram bot: <a href="https://t.me/FairFindBot" target="_blank">@FairFindBot</a></p>
+            <p class="copyright">© 2026 FairFind</p>
+        </div>
     </footer>
 </body>
 </html>
