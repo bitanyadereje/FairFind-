@@ -34,7 +34,7 @@ async function processUnprocessed() {
      FROM raw_feeds 
      WHERE processed = false 
      ORDER BY id 
-     LIMIT 20`
+     LIMIT 2`
   );
   
   if (rows.length === 0) {
@@ -82,7 +82,7 @@ if (feed.channel_username && feed.telegram_message_id) {
 await pool.query("UPDATE raw_feeds SET processed = true WHERE id = $1", [feed.id]);      console.log(`✅ Saved: ${extracted.item_name || 'Unnamed'} – ${extracted.price} ETB (${fairness})`);
       if (messageUrl) console.log(`   🔗 ${messageUrl}`);
       
-      await sleep(6000);
+      await sleep(10000);
     } catch (err) {
       console.error(`❌ Failed feed ${feed.id}:`, err);
     }
