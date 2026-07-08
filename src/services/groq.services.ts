@@ -1,9 +1,14 @@
 import Groq from 'groq-sdk';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+
+// Initialize Gemini client (free tier)
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+const geminiModel = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
 export interface ExtractedProduct {
   item_name: string | null;
@@ -15,6 +20,10 @@ export interface ExtractedProduct {
   category: string | null;
 }
 
+/**
+ * Extracts structured product data from messy Telegram text.
+ * Tries Groq first; if it fails (rate limit, server error), falls back to Gemini.
+ */
 export async function extractProductFromText(rawText: string): Promise<ExtractedProduct> {
   const prompt = `
 You are an AI that extracts structured product data from Ethiopian marketplace posts on Telegram. The text may mix Amharic (Fidel), English, Latin-script Amharic, emojis, and inconsistent formatting.
@@ -44,6 +53,7 @@ Now extract from this text: """${rawText}"""
 Return ONLY valid JSON. No extra text, no markdown, no explanation.
 `;
 
+  // ---------- Step 1: Try Groq ----------
   try {
     const response = await groq.chat.completions.create({
       model: 'llama-3.1-8b-instant',
@@ -53,20 +63,42 @@ Return ONLY valid JSON. No extra text, no markdown, no explanation.
     });
 
     const content = response.choices[0]?.message?.content || '{}';
-    // Remove any markdown code block markers if present
     const jsonStr = content.replace(/```json\s*|\s*```/g, '').trim();
     return JSON.parse(jsonStr);
-  } catch (error) {
-    console.error('Error extracting product from text:', error);
-    // Return a default object with nulls to avoid breaking the pipeline
-    return {
-      item_name: null,
-      price: null,
-      currency: 'ETB',
-      condition: null,
-      location: null,
-      contact_info: null,
-      category: null
-    };
+  } catch (groqError: any) {
+    // Only fallback if it's a rate limit (429) or server error (5xx)
+    const shouldFallback =
+      groqError.status === 429 ||
+      (groqError.status >= 500 && groqError.status < 600) ||
+      groqError.message?.includes('rate limit') ||
+      groqError.message?.includes('timeout');
+
+    if (!shouldFallback) {
+      // If it's a different error (e.g., invalid API key), rethrow
+      console.error('❌ Groq error (non‑fallback):', groqError);
+      throw groqError;
+    }
+
+    console.warn('⚠️ Groq failed, falling back to Gemini...', groqError.message || groqError);
+
+    // ---------- Step 2: Fallback to Gemini ----------
+    try {
+      const result = await geminiModel.generateContent(prompt);
+      const text = result.response.text();
+      const jsonStr = text.replace(/```json\s*|\s*```/g, '').trim();
+      return JSON.parse(jsonStr);
+    } catch (geminiError) {
+      console.error('❌ Gemini fallback also failed:', geminiError);
+      // Return a safe fallback object to avoid crashing the pipeline
+      return {
+        item_name: null,
+        price: null,
+        currency: 'ETB',
+        condition: null,
+        location: null,
+        contact_info: null,
+        category: null,
+      };
+    }
   }
 }

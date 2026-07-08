@@ -1,19 +1,18 @@
+// src/config/db.ts
 import { Pool } from 'pg';
+import { DATABASE_URL } from './env';
 
-const connectionString = process.env.DATABASE_URL;
-if (!connectionString) {
-  console.error('❌ DATABASE_URL environment variable is missing');
-  process.exit(1);
+if (!DATABASE_URL) {
+  throw new Error('DATABASE_URL is required');
 }
 
 const pool = new Pool({
-  connectionString,
-  ssl: { rejectUnauthorized: false }, // required for Neon
+  connectionString: DATABASE_URL,
+  ssl: { rejectUnauthorized: false },
 });
 
-pool.connect((err) => {
-  if (err) console.error('❌ Database connection failed:', err);
-  else console.log('✅ Connected to PostgreSQL');
+pool.on('error', (err) => {
+  console.error('Unexpected database error:', err);
 });
 
 export default pool;
