@@ -3,6 +3,7 @@ import cron from 'node-cron';
 import { exec } from 'child_process';
 import productRoutes from './routes/api/products.routes';
 import { errorHandler } from './middleware/error.middleware';
+import authRoutes from './routes/api/auth.routes';
 
 const app = express();
 
@@ -10,6 +11,8 @@ const app = express();
 app.use(express.json());
 
 // API Routes
+app.use('/api/products', productRoutes);
+app.use('/api/auth', authRoutes);        // <-- Add this line
 app.use('/api/products', productRoutes);
 
 // Health check
